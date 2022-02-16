@@ -1,0 +1,31 @@
+{
+  "name": "@jithen/circleci-v2-sdk",
+  "version": "1.0.0",
+  "description": "Typescript SDK for v2 CircleCI API",
+  "main": "./dist/main.js",
+  "author": "Jithen Shriyan",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "jest",
+    "bundle": "webpack"
+  },
+  "dependencies": {
+    "@babel/core": "^7.17.4",
+    "@babel/preset-env": "^7.16.11",
+    "axios": "^0.26.0",
+    "babel-loader": "^8.2.3"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.0",
+    "@webpack-cli/generators": "^2.4.2",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.3",
+    "ts-loader": "^9.2.6",
+    "typedoc": "^0.22.11",
+    "typescript": "^4.5.5",
+    "webpack": "^5.69.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
