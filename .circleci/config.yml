@@ -44,10 +44,18 @@ jobs:
 
 workflows:
   version: 2
-  test-deploy:
+  feature:
     jobs:
       - test:
           filters:
+            branches:
+              ignore: main
+  main:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
       - deploy:
