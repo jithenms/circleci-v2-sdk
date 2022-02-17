@@ -1,4 +1,4 @@
-export interface RerunWorkflowOptions {
+export type RerunWorkflowOptions = {
   /** @description Whether to enable SSH access for the triggering user on the newly-rerun job. Requires the jobs parameter to be used and so is mutually exclusive with the from_failed parameter. */
   enable_ssh?: boolean;
   /** @description Whether to rerun the workflow from the failed job. Mutually exclusive with the jobs parameter. */

@@ -1,10 +1,12 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { CircleCIConfig } from "../config/config";
 import {
+  GetWorkflowByIdRequest,
+  ListWorkflowJobsRequest,
+  RerunWorkflowRequest,
   GetWorkflowByIdResponse,
   ListWorkflowJobsResponse,
-  RerunWorkflowResponse,
-  RerunWorkflowOptions
+  RerunWorkflowResponse
 } from "../types";
 
 export class Workflows {
@@ -14,31 +16,34 @@ export class Workflows {
     this.config = config;
   }
 
-  public getWorkflowById(id: string): Promise<GetWorkflowByIdResponse> {
+  public getWorkflowById(
+    { workflowId }: GetWorkflowByIdRequest
+  ): Promise<GetWorkflowByIdResponse> {
     return new Promise((resolve, reject) => {
       this.config.client
-        .get(`/workflow/${id}`)
+        .get(`/workflow/${workflowId}`)
         .then((res: AxiosResponse) => resolve(res.data))
         .catch((error: AxiosError) => reject(error));
     });
   }
 
-  public listWorkflowJobs(id: string): Promise<ListWorkflowJobsResponse> {
+  public listWorkflowJobs(
+    { workflowId }: ListWorkflowJobsRequest
+  ): Promise<ListWorkflowJobsResponse> {
     return new Promise((resolve, reject) => {
       this.config.client
-        .get(`/workflow/${id}/job`)
+        .get(`/workflow/${workflowId}/job`)
         .then((res: AxiosResponse) => resolve(res.data))
         .catch((error: AxiosError) => reject(error));
     });
   }
 
   public rerunWorkflow(
-    id: string,
-    options: RerunWorkflowOptions
+    { workflowId, options }: RerunWorkflowRequest
   ): Promise<RerunWorkflowResponse> {
     return new Promise((resolve, reject) => {
       this.config.client
-        .post(`/workflow/${id}/rerun`, options)
+        .post(`/workflow/${workflowId}/rerun`, options)
         .then((res: AxiosResponse) => resolve(res.data))
         .catch((error: AxiosError) => reject(error));
     });

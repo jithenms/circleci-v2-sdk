@@ -1,6 +1,14 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { CircleCIConfig } from "../config/config";
-import { GetJobArtifactsResponse, GetJobDetailsResponse, GetTestsResponse } from "../types";
+import {
+  GetJobDetailsRequest,
+  GetJobArtifactsRequest,
+  GetTestsRequest,
+  GetJobArtifactsResponse,
+  GetJobDetailsResponse,
+  GetTestsResponse,
+} from "../types";
+import { getProjectSlug } from "../util/util";
 
 export class Jobs {
   private readonly config: CircleCIConfig;
@@ -9,28 +17,49 @@ export class Jobs {
     this.config = config;
   }
 
-  public getJobDetails(jobNumber: number): Promise<GetJobDetailsResponse> {
+  public getJobDetails(
+    { repo, jobNumber }: GetJobDetailsRequest
+  ): Promise<GetJobDetailsResponse> {
     return new Promise((resolve, reject) => {
+      const projectSlug = getProjectSlug(
+        this.config.options.gitProvider,
+        this.config.options.username,
+        repo
+      );
       this.config.client
-        .get(`/project/${this.config.projectSlug}/job/${jobNumber}`)
+        .get(`/project/${projectSlug}/job/${jobNumber}`)
         .then((res: AxiosResponse) => resolve(res.data))
         .catch((error: AxiosError) => reject(error));
     });
   }
 
-  public getJobArtifacts(jobNumber: number): Promise<GetJobArtifactsResponse> {
+  public getJobArtifacts(
+    { repo, jobNumber }: GetJobArtifactsRequest
+  ): Promise<GetJobArtifactsResponse> {
     return new Promise((resolve, reject) => {
+      const projectSlug = getProjectSlug(
+        this.config.options.gitProvider,
+        this.config.options.username,
+        repo
+      );
       this.config.client
-        .get(`/project/${this.config.projectSlug}/${jobNumber}/artifacts`)
+        .get(`/project/${projectSlug}/${jobNumber}/artifacts`)
         .then((res: AxiosResponse) => resolve(res.data))
         .catch((error: AxiosError) => reject(error));
     });
   }
 
-  public getTests(jobNumber: number): Promise<GetTestsResponse> {
+  public getTests(
+    { repo, jobNumber }: GetTestsRequest
+  ): Promise<GetTestsResponse> {
     return new Promise((resolve, reject) => {
+      const projectSlug = getProjectSlug(
+        this.config.options.gitProvider,
+        this.config.options.username,
+        repo
+      );
       this.config.client
-        .get(`/project/${this.config.projectSlug}/${jobNumber}/tests`)
+        .get(`/project/${projectSlug}/${jobNumber}/tests`)
         .then((res: AxiosResponse) => resolve(res.data))
         .catch((error: AxiosError) => reject(error));
     });

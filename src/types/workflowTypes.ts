@@ -1,4 +1,23 @@
-export interface GetWorkflowByIdResponse {
+import { RerunWorkflowOptions } from "./options";
+
+export type GetWorkflowByIdRequest = {
+  /** The unique ID of the workflow. */
+  workflowId: string
+}
+
+export type ListWorkflowJobsRequest = {
+  /** The unique ID of the workflow. */
+  workflowId: string
+}
+
+export type RerunWorkflowRequest = {
+  /** The unique ID of the workflow. */
+  workflowId: string,
+  /** Options for rerunning workflow */
+  options?: RerunWorkflowOptions
+}
+
+export type GetWorkflowByIdResponse = {
   /**
    * Format: uuid
    * @description The ID of the pipeline this workflow belongs to.
@@ -34,15 +53,15 @@ export interface GetWorkflowByIdResponse {
    * @enum {string}
    */
   status:
-    | "success"
-    | "running"
-    | "not_run"
-    | "failed"
-    | "error"
-    | "failing"
-    | "on_hold"
-    | "canceled"
-    | "unauthorized";
+  | "success"
+  | "running"
+  | "not_run"
+  | "failed"
+  | "error"
+  | "failing"
+  | "on_hold"
+  | "canceled"
+  | "unauthorized";
   /** Format: uuid */
   started_by: string;
   /**
@@ -62,7 +81,7 @@ export interface GetWorkflowByIdResponse {
   stopped_at: string;
 }
 
-export interface ListWorkflowJobsResponse {
+export type ListWorkflowJobsResponse = {
   items: {
     /**
      * Format: uuid
@@ -99,7 +118,7 @@ export interface ListWorkflowJobsResponse {
      */
     project_slug: string;
     /** @description The current status of the job. */
-    status: unknown;
+    status: string | null;
     /**
      * @description The type of job.
      * @enum {string}
@@ -120,7 +139,7 @@ export interface ListWorkflowJobsResponse {
   next_page_token: string;
 }
 
-export interface RerunWorkflowResponse {
+export type RerunWorkflowResponse = {
   /**
    * Format: uuid
    * @description The ID of the newly-created workflow.

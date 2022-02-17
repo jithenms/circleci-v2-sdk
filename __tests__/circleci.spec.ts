@@ -1,21 +1,21 @@
 import axios from "axios";
-import { CircleCI } from "../src";
+import { CircleCI, GitProviders } from "../src";
 
 describe("CircleCI Client", () => {
-  let client: CircleCI;
+  let circleCI: CircleCI;
 
   beforeEach(() => {
-    client = new CircleCI({
+    circleCI = new CircleCI({
       baseUrl: "test",
-      projectSlug: "test",
+      options: {
+        gitProvider: GitProviders.GITHUB,
+        username: "Jithen"
+      },
       token: "test",
-      auth: true,
       client: axios,
     });
   });
   test("should instantiate circleci client", () => {
-    expect(client).toBeInstanceOf(CircleCI);
-    expect(client.config.projectSlug).toEqual("test");
-    expect(client.config.token).toEqual("test");
+    expect(circleCI).toBeInstanceOf(CircleCI);
   });
 });

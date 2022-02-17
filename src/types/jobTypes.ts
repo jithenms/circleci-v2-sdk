@@ -1,4 +1,34 @@
-export interface GetJobDetailsResponse {
+export type GetJobDetailsRequest = {
+  /**
+ * @description The repository name of where the pipeline ran.
+ * @example circleci-v2-sdk
+ */
+  repo: string,
+  /** The number of the job. */
+  jobNumber: number
+}
+
+export type GetJobArtifactsRequest = {
+  /**
+ * @description The repository name of where the pipeline ran.
+ * @example circleci-v2-sdk
+ */
+  repo: string,
+  /** The number of the job. */
+  jobNumber: number
+}
+
+export type GetTestsRequest = {
+  /**
+ * @description The repository name of where the pipeline ran.
+ * @example circleci-v2-sdk
+ */
+  repo: string,
+  /** The number of the job. */
+  jobNumber: number
+}
+
+export type GetJobDetailsResponse = {
   /** @description URL of the job in CircleCI Web UI. */
   web_url: string;
   /** @description Information about a project. */
@@ -117,7 +147,7 @@ export interface GetJobDetailsResponse {
   stopped_at?: string;
 }
 
-export interface GetJobArtifactsResponse {
+export type GetJobArtifactsResponse = {
   items: {
     /** @description The artifact path. */
     path: string;
@@ -133,7 +163,7 @@ export interface GetJobArtifactsResponse {
   next_page_token: string;
 }
 
-export interface GetTestsResponse {
+export type GetTestsResponse = {
   /** TestsResponse */
   items: {
     /** @description The failure message associated with the test. */
