@@ -1,13 +1,12 @@
 version: 2.1
-
-defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: circleci/node@5.0.0
+orbs:
+  node: circleci/node@5.0.0
 
 jobs:
   test:
-    <<: *defaults
+    docker:
+      - image: "cimg/base:stable"
+    working_directory: ~/repo
     steps:
       - checkout
 
@@ -33,7 +32,9 @@ jobs:
           root: ~/repo
           paths: .
   deploy:
-    <<: *defaults
+    docker:
+      - image: "cimg/base:stable"
+    working_directory: ~/repo
     steps:
       - attach_workspace:
           at: ~/repo
