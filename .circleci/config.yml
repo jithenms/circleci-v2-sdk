@@ -50,16 +50,16 @@ jobs:
       - run:
           name: Publish package to npm
           command: npm publish
-      - add_ssh_keys:
-          fingerprints:
-            - "$GH_DEPLOY_KEY"
-      - run:
-          name: Deploy docs to gh pages
-          command: |
-            yarn add gh-pages
-            git config user.email "shriyanjithen@gmail.com"
-            git config user.name "jithenshriyan"
-            gh-pages --dotfiles --message "[skip ci] Updates" --dist ~/repo/docs
+      # - add_ssh_keys:
+      #     fingerprints:
+      #       - "$GH_DEPLOY_KEY"
+      # - run:
+      #     name: Deploy docs to gh pages
+      #     command: |
+      #       yarn add gh-pages
+      #       git config user.email "shriyanjithen@gmail.com"
+      #       git config user.name "jithenshriyan"
+      #       gh-pages --dotfiles --message "[skip ci] Updates" --dist ~/repo/docs
 
 workflows:
   version: 2
