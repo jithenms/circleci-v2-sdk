@@ -39,6 +39,16 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - node/install:
+          install-yarn: true
+          node-version: "16.13"
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --immutable
       - run:
           name: Build code bundle
           command: yarn build
@@ -49,6 +59,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - node/install:
+          node-version: "16.13"
       - run:
           name: Authenticate with npm registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
