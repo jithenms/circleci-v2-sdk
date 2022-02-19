@@ -1,16 +1,9 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { CircleCIConfig } from "../config/config";
-import {
-  GetJobDetailsRequest,
-  GetJobArtifactsRequest,
-  GetTestsRequest,
-  GetJobArtifactsResponse,
-  GetJobDetailsResponse,
-  GetTestsResponse,
-} from "../types";
-import { getProjectSlug } from "../util/util";
+import { Job, JobArtifactList, JobTestList } from "../types/data/jobData";
+import { GenericJobRequest } from "../types/requests/jobRequests";
 
-export class Jobs {
+export class JobService {
   private readonly config: CircleCIConfig;
 
   constructor(config: CircleCIConfig) {
@@ -18,14 +11,9 @@ export class Jobs {
   }
 
   public getJobDetails(
-    { repo, jobNumber }: GetJobDetailsRequest
-  ): Promise<GetJobDetailsResponse> {
+    { projectSlug, jobNumber }: GenericJobRequest
+  ): Promise<Job> {
     return new Promise((resolve, reject) => {
-      const projectSlug = getProjectSlug(
-        this.config.options.gitProvider,
-        this.config.options.username,
-        repo
-      );
       this.config.client
         .get(`/project/${projectSlug}/job/${jobNumber}`)
         .then((res: AxiosResponse) => resolve(res.data))
@@ -34,14 +22,9 @@ export class Jobs {
   }
 
   public getJobArtifacts(
-    { repo, jobNumber }: GetJobArtifactsRequest
-  ): Promise<GetJobArtifactsResponse> {
+    { projectSlug, jobNumber }: GenericJobRequest
+  ): Promise<JobArtifactList> {
     return new Promise((resolve, reject) => {
-      const projectSlug = getProjectSlug(
-        this.config.options.gitProvider,
-        this.config.options.username,
-        repo
-      );
       this.config.client
         .get(`/project/${projectSlug}/${jobNumber}/artifacts`)
         .then((res: AxiosResponse) => resolve(res.data))
@@ -50,14 +33,9 @@ export class Jobs {
   }
 
   public getTests(
-    { repo, jobNumber }: GetTestsRequest
-  ): Promise<GetTestsResponse> {
+    { projectSlug, jobNumber }: GenericJobRequest
+  ): Promise<JobTestList> {
     return new Promise((resolve, reject) => {
-      const projectSlug = getProjectSlug(
-        this.config.options.gitProvider,
-        this.config.options.username,
-        repo
-      );
       this.config.client
         .get(`/project/${projectSlug}/${jobNumber}/tests`)
         .then((res: AxiosResponse) => resolve(res.data))

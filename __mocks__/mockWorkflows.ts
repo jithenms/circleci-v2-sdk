@@ -1,6 +1,6 @@
-import { GetWorkflowByIdResponse, ListWorkflowJobsResponse } from "../src";
+import { Workflow, WorkflowInfo, WorkflowJobList } from "../src/types/data/workflowData";
 
-export const mockWorkflowById: GetWorkflowByIdResponse = {
+export const mockWorkflowById: Workflow = {
     pipeline_id: "ec036e81-7903-4e4d-bbfa-ac8516341cf0",
     canceled_by: "026a6d28-c22e-4aab-a8b4-bd7131a8ea35",
     id: "497f6eca-6276-4993-bfeb-53cbbbba6f08",
@@ -15,7 +15,7 @@ export const mockWorkflowById: GetWorkflowByIdResponse = {
     stopped_at: "2019-08-24T14:15:22Z",
 };
 
-export const mockWorkflowJobs: ListWorkflowJobsResponse = {
+export const mockWorkflowJobs: WorkflowJobList = {
     "items": [
         {
             "canceled_by": "026a6d28-c22e-4aab-a8b4-bd7131a8ea35",
@@ -35,4 +35,8 @@ export const mockWorkflowJobs: ListWorkflowJobsResponse = {
         }
     ],
     "next_page_token": "string"
+}
+
+export const mockRerunWorkflow: WorkflowInfo = {
+    "workflow_id": "0e53027b-521a-4c40-9042-47e72b3c63a3"
 }

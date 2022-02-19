@@ -1,15 +1,14 @@
-# 🚀 Welcome to your new awesome project!
+# @jithen/circleci-v2-sdk
 
-This project has been created using **webpack-cli**, you can now run
+> The Typescript CircleCI V2 SDK for Browsers and Node.js.
+> The `@jithen/circleci-v2-sdk` package integrates pipelines, workflows, and jobs from CircleCI
 
-```
-npm run build
-```
+- Coming Soon: Insights, Project, Schedule, and User API Support
 
-or
+## Features
 
-```
-yarn build
-```
+- **Universal**. Works in all modern browsers and [Node.js](https://nodejs.org/)
+- **Tested**. All modules have extensive test coverage.
+- **Typed**. All modules have TypeScript declarations.
 
-to bundle your application
+## [Docs](https://nodejs.org/)

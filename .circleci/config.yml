@@ -23,14 +23,12 @@ jobs:
       - run:
           name: Run tests
           command: yarn test
-
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - .yarn/cache
             - .yarn/unplugged
-
       - persist_to_workspace:
           root: ~/repo
           paths: .
@@ -44,20 +42,27 @@ jobs:
       - node/install:
           node-version: "16.13"
       - run:
-          name: Authenticate with registry
+          name: Build code bundle
+          command: yarn build
+      - run:
+          name: Authenticate with npm registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
       - run:
-          name: Publish package
+          name: Publish package to npm
           command: npm publish
+      - add_ssh_keys:
+          fingerprints:
+            - "$GH_DEPLOY_KEY"
+      - run:
+          name: Deploy docs to gh pages
+          command: |
+            yarn add gh-pages
+            git config user.email "shriyanjithen@gmail.com"
+            git config user.name "jithenshriyan"
+            gh-pages --dotfiles --message "[skip ci] Updates" --dist ~/repo/docs
 
 workflows:
   version: 2
-  feature:
-    jobs:
-      - test:
-          filters:
-            branches:
-              ignore: main
   main:
     jobs:
       - test:

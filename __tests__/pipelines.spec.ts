@@ -1,10 +1,14 @@
 import { CircleCI } from "../src/index";
 import axios from "axios";
-import { GitProviders } from "../src/config";
 import {
   mockPipelineById,
+  mockListPipelinesForProject,
   mockListPipelines,
   mockTriggerPipeline,
+  mockContinuePipeline,
+  mockPipelineConfigById,
+  mockListWorkflowsByPipelineId,
+  mockPipelineByNumber
 } from "../__mocks__/mockPipelines";
 
 jest.mock("axios");
@@ -17,7 +21,7 @@ describe("Pipelines", () => {
     circleCI = new CircleCI({
       baseUrl: "test",
       options: {
-        gitProvider: GitProviders.GITHUB,
+        gitProvider: "gh",
         username: "Jithen",
       },
       token: "test",
@@ -31,15 +35,10 @@ describe("Pipelines", () => {
     expect(res).toEqual(mockPipelineById);
   });
 
-  test("it should return mock listPipelinesForProject", async () => {
+  test("it should return mock listPipelines", async () => {
     mockedAxios.get.mockResolvedValue({ data: mockListPipelines });
 
-    const res = await circleCI.pipelines.listPipelinesForProject({
-      repo: "circleci-v2-sdk",
-      branch: "main",
-      pageToken: "page token"
-
-    });
+    const res = await circleCI.pipelines.listPipelines();
     expect(res).toEqual(mockListPipelines);
   });
 
@@ -47,11 +46,56 @@ describe("Pipelines", () => {
     mockedAxios.post.mockResolvedValue({ data: mockTriggerPipeline });
 
     const res = await circleCI.pipelines.triggerPipeline({
-      repo: "circleci-v2-sdk",
+      projectSlug: "gh/CircleCI-Public/api-preview-docs",
       branch: "main",
       tag: "1.0.0",
       parameters: { environment: "test", prop: "hello" }
     });
     expect(res).toEqual(mockTriggerPipeline);
   });
+
+  test("it should return mock continuePipeline", async () => {
+    mockedAxios.post.mockResolvedValue({ data: mockContinuePipeline });
+    const res = await circleCI.pipelines.continuePipeline({
+      'continuation-key': "key",
+      configuration: "config",
+      parameters: { environment: "test", prop: "hello" }
+    });
+    expect(res).toEqual(mockContinuePipeline);
+  })
+
+  test("it should return mock getPipelineConfigById", async () => {
+    mockedAxios.get.mockResolvedValue({ data: mockPipelineConfigById });
+    const res = await circleCI.pipelines.getPipelineConfigById({
+      pipelineId: "id"
+    });
+    expect(res).toEqual(mockPipelineConfigById);
+  })
+
+  test("it should return mock listWorkflowsByPipelineId", async () => {
+    mockedAxios.get.mockResolvedValue({ data: mockListWorkflowsByPipelineId });
+    const res = await circleCI.pipelines.listWorkflowsByPipelineId({
+      pipelineId: "id",
+      pageToken: "token"
+    });
+    expect(res).toEqual(mockListWorkflowsByPipelineId);
+  })
+
+  test("it should return mock listPipelinesForProject", async () => {
+    mockedAxios.get.mockResolvedValue({ data: mockListPipelinesForProject });
+    const res = await circleCI.pipelines.listPipelinesForProject({
+      pageToken: "token",
+      projectSlug: "gh/CircleCI-Public/api-preview-docs",
+    });
+    expect(res).toEqual(mockListPipelinesForProject);
+  })
+
+  test("it should return mock getPipelineByNumber", async () => {
+    mockedAxios.get.mockResolvedValue({ data: mockPipelineByNumber });
+    const res = await circleCI.pipelines.getPipelineByNumber({
+      pipelineNumber: 1,
+      projectSlug: "gh/CircleCI-Public/api-preview-docs",
+    });
+    expect(res).toEqual(mockPipelineByNumber);
+  })
 });

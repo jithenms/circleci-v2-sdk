@@ -1,41 +1,43 @@
-import { Axios, AxiosRequestHeaders } from "axios";
-import { name, version } from "../../package.json";
+import axios, { Axios, AxiosRequestHeaders } from "axios";
 
-type Config = {
-  baseUrl: string;
+export type Config = {
+  baseUrl?: string;
   options: Options;
   token: string;
-  client: Axios;
-}
-
-export enum GitProviders {
-  GITHUB = "gh",
-  BITBUCKET = "bb",
-}
+  client?: Axios;
+};
 
 type Options = {
-  gitProvider: GitProviders;
+  /** @description gh = github, bb = bitbucket */
+  gitProvider: "gh" | "bb";
+  /** @description account username or organization name */
   username: string;
-}
+};
 
 export class CircleCIConfig implements Config {
-  public readonly baseUrl: string = "https://circleci.com/api/v2";
+  public readonly baseUrl: string;
   public readonly options: Options;
   public readonly token: string;
   public readonly client: Axios;
 
-  constructor(baseUrl: string, token: string, options: Options) {
+  constructor({
+    token,
+    options,
+    client,
+    baseUrl = "https://circleci.com/api/v2",
+  }: Config) {
     this.baseUrl = baseUrl;
     this.options = options;
     this.token = token;
-    this.client = new Axios({
-      baseURL: baseUrl,
-      headers: {
-        "Circle-Token": token,
-        "User-Agent": `${name} ${version}`,
-        "Content-Type": "application/json",
-        Accepts: "application/json",
-      } as AxiosRequestHeaders,
-    });
+    this.client = client
+      ? client
+      : axios.create({
+        baseURL: baseUrl,
+        headers: {
+          "Circle-Token": token,
+          "Content-Type": "application/json",
+          Accepts: "application/json",
+        } as AxiosRequestHeaders,
+      });
   }
 }

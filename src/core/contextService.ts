@@ -1,43 +1,38 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { CircleCIConfig } from "../config/config";
+import { Message } from "../types/common";
+import {
+    AddedEnvVariable,
+    ContextList,
+    Context,
+    EnvVariableList,
+} from "../types/data/contextData";
 import {
     AddEnvVariableRequest,
-    AddEnvVariableResponse,
     CreateContextRequest,
-    CreateContextResponse,
     DeleteContextRequest,
-    DeleteContextResponse,
     DeleteEnvVariableRequest,
-    DeleteEnvVariableResponse,
     GetContextRequest,
-    GetContextResponse,
     ListContextsRequest,
-    ListContextsResponse,
     ListEnvVariablesRequest,
-    ListEnvVariablesResponse,
-} from "../types/contextTypes";
+} from "../types/requests/contextRequests";
 
-export class Context {
+export class ContextService {
     private readonly config: CircleCIConfig;
 
     constructor(config: CircleCIConfig) {
         this.config = config;
     }
 
-    public listContexts({
-        ownerId,
-        ownerSlug,
-        ownerType,
-        pageToken,
-    }: ListContextsRequest): Promise<ListContextsResponse> {
+    public listContexts(params?: ListContextsRequest): Promise<ContextList> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .get(`/context`, {
                     params: {
-                        "owner-id": ownerId,
-                        "owner-slug": ownerSlug,
-                        "owner-type": ownerType,
-                        "page-token": pageToken,
+                        "owner-id": params?.ownerId,
+                        "owner-slug": params?.ownerSlug,
+                        "owner-type": params?.ownerType,
+                        "page-token": params?.pageToken,
                     },
                 })
                 .then((res: AxiosResponse) => resolve(res.data))
@@ -45,9 +40,7 @@ export class Context {
         });
     }
 
-    public createContext(
-        request: CreateContextRequest
-    ): Promise<CreateContextResponse> {
+    public createContext(request: CreateContextRequest): Promise<Context> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .post("/context", request)
@@ -56,9 +49,7 @@ export class Context {
         });
     }
 
-    public deleteContext({
-        contextId,
-    }: DeleteContextRequest): Promise<DeleteContextResponse> {
+    public deleteContext({ contextId }: DeleteContextRequest): Promise<Message> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .delete(`/context/${contextId}`)
@@ -67,9 +58,7 @@ export class Context {
         });
     }
 
-    public getContext({
-        contextId,
-    }: GetContextRequest): Promise<GetContextResponse> {
+    public getContext({ contextId }: GetContextRequest): Promise<Context> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .get(`/context/${contextId}`)
@@ -80,7 +69,7 @@ export class Context {
 
     public listEnvironmentVariablesFromContext({
         contextId,
-    }: ListEnvVariablesRequest): Promise<ListEnvVariablesResponse> {
+    }: ListEnvVariablesRequest): Promise<EnvVariableList> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .get(`/context/${contextId}/environment-variable`)
@@ -92,7 +81,7 @@ export class Context {
     public deleteEnvironmentVariableFromContext({
         contextId,
         envVarName,
-    }: DeleteEnvVariableRequest): Promise<DeleteEnvVariableResponse> {
+    }: DeleteEnvVariableRequest): Promise<Message> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .delete(`/context/${contextId}/environment-variable/${envVarName}`)
@@ -105,7 +94,7 @@ export class Context {
         contextId,
         envVarName,
         envValue,
-    }: AddEnvVariableRequest): Promise<AddEnvVariableResponse> {
+    }: AddEnvVariableRequest): Promise<AddedEnvVariable> {
         return new Promise((resolve, reject) => {
             this.config.client
                 .put(`/context/${contextId}/environment-variable/${envVarName}`, {

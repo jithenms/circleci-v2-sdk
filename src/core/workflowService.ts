@@ -1,24 +1,26 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { CircleCIConfig } from "../config/config";
 import {
   GetWorkflowByIdRequest,
   ListWorkflowJobsRequest,
   RerunWorkflowRequest,
-  GetWorkflowByIdResponse,
-  ListWorkflowJobsResponse,
-  RerunWorkflowResponse
-} from "../types";
+} from "../types/requests/workflowRequests";
+import { CircleCIConfig } from "../config/config";
+import {
+  Workflow,
+  WorkflowInfo,
+  WorkflowJobList,
+} from "../types/data/workflowData";
 
-export class Workflows {
+export class WorkflowService {
   private readonly config: CircleCIConfig;
 
   constructor(config: CircleCIConfig) {
     this.config = config;
   }
 
-  public getWorkflowById(
-    { workflowId }: GetWorkflowByIdRequest
-  ): Promise<GetWorkflowByIdResponse> {
+  public getWorkflowById({
+    workflowId
+  }: GetWorkflowByIdRequest): Promise<Workflow> {
     return new Promise((resolve, reject) => {
       this.config.client
         .get(`/workflow/${workflowId}`)
@@ -27,9 +29,9 @@ export class Workflows {
     });
   }
 
-  public listWorkflowJobs(
-    { workflowId }: ListWorkflowJobsRequest
-  ): Promise<ListWorkflowJobsResponse> {
+  public listWorkflowJobs({
+    workflowId,
+  }: ListWorkflowJobsRequest): Promise<WorkflowJobList> {
     return new Promise((resolve, reject) => {
       this.config.client
         .get(`/workflow/${workflowId}/job`)
@@ -38,9 +40,10 @@ export class Workflows {
     });
   }
 
-  public rerunWorkflow(
-    { workflowId, options }: RerunWorkflowRequest
-  ): Promise<RerunWorkflowResponse> {
+  public rerunWorkflow({
+    workflowId,
+    options,
+  }: RerunWorkflowRequest): Promise<WorkflowInfo> {
     return new Promise((resolve, reject) => {
       this.config.client
         .post(`/workflow/${workflowId}/rerun`, options)

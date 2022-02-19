@@ -1,26 +1,25 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { CircleCIConfig } from "../config/config";
+import { Message } from "../types/common";
 import {
-  TriggerPipelineRequest,
+  Pipeline,
+  PipelineConfig,
+  PipelineList,
+  TriggeredPipeline,
+} from "../types/data/pipelineData";
+import {
   ContinuePipelineRequest,
-  ContinuePipelineResponse,
-  ListWorkflowsByPipelineIdRequest,
-  ListWorkflowsByPipelineIdResponse,
-  ListPipelinesRequest,
-  ListPipelinesResponse,
-  ListPipelinesByProjectRequest,
   GetPipelineByIdRequest,
   GetPipelineByNumberRequest,
-  GetPipelineByNumberResponse,
-  GetPipelineByIdResponse,
   GetPipelineConfigByIdRequest,
-  GetPipelineConfigByIdResponse,
-  ListPipelinesByProjectResponse,
-  TriggerPipelineResponse,
-} from "../types";
-import { getOrgSlug, getProjectSlug } from "../util/util";
+  ListPipelinesByProjectRequest,
+  ListPipelinesRequest,
+  ListWorkflowsByPipelineIdRequest,
+  TriggerPipelineRequest,
+} from "../types/requests/pipelineRequests";
+import { WorkflowList } from "../types/data/workflowData";
 
-export class Pipelines {
+export class PipelineService {
   private readonly config: CircleCIConfig;
 
   constructor(config: CircleCIConfig) {
@@ -28,17 +27,12 @@ export class Pipelines {
   }
 
   public triggerPipeline({
-    repo,
+    projectSlug,
     branch,
     tag,
     parameters,
-  }: TriggerPipelineRequest): Promise<TriggerPipelineResponse> {
+  }: TriggerPipelineRequest): Promise<TriggeredPipeline> {
     return new Promise((resolve, reject) => {
-      const projectSlug = getProjectSlug(
-        this.config.options.gitProvider,
-        this.config.options.username,
-        repo
-      );
       this.config.client
         .post(`/project/${projectSlug}/pipeline`, {
           branch: branch,
@@ -50,9 +44,7 @@ export class Pipelines {
     });
   }
 
-  public continuePipeline(
-    request: ContinuePipelineRequest
-  ): Promise<ContinuePipelineResponse> {
+  public continuePipeline(request: ContinuePipelineRequest): Promise<Message> {
     return new Promise((resolve, reject) => {
       this.config.client
         .post(`/pipeline/continue`, request)
@@ -63,7 +55,7 @@ export class Pipelines {
 
   public getPipelineConfigById({
     pipelineId,
-  }: GetPipelineConfigByIdRequest): Promise<GetPipelineConfigByIdResponse> {
+  }: GetPipelineConfigByIdRequest): Promise<PipelineConfig> {
     return new Promise((resolve, reject) => {
       this.config.client
         .get(`/pipeline/${pipelineId}/config`)
@@ -75,7 +67,7 @@ export class Pipelines {
   public listWorkflowsByPipelineId({
     pipelineId,
     pageToken,
-  }: ListWorkflowsByPipelineIdRequest): Promise<ListWorkflowsByPipelineIdResponse> {
+  }: ListWorkflowsByPipelineIdRequest): Promise<WorkflowList> {
     return new Promise((resolve, reject) => {
       this.config.client
         .get(`/pipeline/${pipelineId}/workflow`, {
@@ -88,22 +80,14 @@ export class Pipelines {
     });
   }
 
-  public listPipelinesForProject({
-    repo,
-    branch,
-    pageToken,
-  }: ListPipelinesByProjectRequest): Promise<ListPipelinesByProjectResponse> {
+  public listPipelines(params?: ListPipelinesRequest): Promise<PipelineList> {
     return new Promise((resolve, reject) => {
-      const projectSlug = getProjectSlug(
-        this.config.options.gitProvider,
-        this.config.options.username,
-        repo
-      );
       this.config.client
-        .get(`/project/${projectSlug}/pipeline`, {
+        .get(`/pipeline`, {
           params: {
-            branch: branch,
-            "page-token": pageToken,
+            "org-slug": params?.orgSlug,
+            "page-token": params?.pageToken,
+            mine: params?.mine
           },
         })
         .then((res: AxiosResponse) => resolve(res.data))
@@ -111,22 +95,17 @@ export class Pipelines {
     });
   }
 
-  public listPipelines({
+  public listPipelinesForProject({
+    branch,
     pageToken,
-    mine,
-  }: ListPipelinesRequest): Promise<ListPipelinesResponse> {
+    projectSlug
+  }: ListPipelinesByProjectRequest): Promise<PipelineList> {
     return new Promise((resolve, reject) => {
-      // TODO: Maybe param instead of util
-      const orgSlug = getOrgSlug(
-        this.config.options.gitProvider,
-        this.config.options.username
-      );
       this.config.client
-        .get(`/pipeline`, {
+        .get(`/project/${projectSlug}/pipeline`, {
           params: {
-            "org-slug": orgSlug,
-            "page-token": pageToken,
-            mine: mine,
+            branch: branch,
+            "page-token": pageToken
           },
         })
         .then((res: AxiosResponse) => resolve(res.data))
@@ -136,7 +115,7 @@ export class Pipelines {
 
   public getPipelineById({
     pipelineId,
-  }: GetPipelineByIdRequest): Promise<GetPipelineByIdResponse> {
+  }: GetPipelineByIdRequest): Promise<Pipeline> {
     return new Promise((resolve, reject) => {
       this.config.client
         .get(`/pipeline/${pipelineId}`)
@@ -147,14 +126,9 @@ export class Pipelines {
 
   public getPipelineByNumber({
     pipelineNumber,
-    repo,
-  }: GetPipelineByNumberRequest): Promise<GetPipelineByNumberResponse> {
+    projectSlug,
+  }: GetPipelineByNumberRequest): Promise<Pipeline> {
     return new Promise((resolve, reject) => {
-      const projectSlug = getProjectSlug(
-        this.config.options.gitProvider,
-        this.config.options.username,
-        repo
-      );
       this.config.client
         .get(`/project/${projectSlug}/pipeline/${pipelineNumber}`)
         .then((res: AxiosResponse) => resolve(res.data))

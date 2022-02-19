@@ -1,16 +1,22 @@
-import { CircleCIConfig } from "../config/config";
-import { Pipelines } from "./pipelines";
-import { Jobs } from "./jobs";
-import { Workflows } from ".";
+import { ContextService, JobService, PipelineService, WorkflowService } from ".";
+import { CircleCIConfig, Config } from "../config/config";
 
 export class CircleCI {
-  public readonly pipelines: Pipelines;
-  public readonly jobs: Jobs;
-  public readonly workflows: Workflows
+  public readonly pipelines: PipelineService;
+  public readonly jobs: JobService;
+  public readonly workflows: WorkflowService
+  public readonly context: ContextService
 
-  constructor(config: CircleCIConfig) {
-    this.pipelines = new Pipelines(config);
-    this.jobs = new Jobs(config);
-    this.workflows = new Workflows(config);
+  constructor(config: Config) {
+    const circleConfig = new CircleCIConfig({
+      token: config.token,
+      options: config.options,
+      client: config?.client,
+      baseUrl: config?.baseUrl
+    });
+    this.pipelines = new PipelineService(circleConfig);
+    this.jobs = new JobService(circleConfig);
+    this.workflows = new WorkflowService(circleConfig);
+    this.context = new ContextService(circleConfig);
   }
 }

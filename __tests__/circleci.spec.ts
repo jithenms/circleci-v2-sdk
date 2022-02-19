@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CircleCI, GitProviders } from "../src";
+import { CircleCI } from "../src";
 
 describe("CircleCI Client", () => {
   let circleCI: CircleCI;
@@ -8,8 +8,8 @@ describe("CircleCI Client", () => {
     circleCI = new CircleCI({
       baseUrl: "test",
       options: {
-        gitProvider: GitProviders.GITHUB,
-        username: "Jithen"
+        gitProvider: "gh",
+        username: "Jithen",
       },
       token: "test",
       client: axios,
