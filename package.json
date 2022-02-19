@@ -29,7 +29,8 @@
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "format": "eslint './**' --fix",
     "test": "jest",
-    "build": "rollup -c && typedoc --out docs/ src/index.ts"
+    "build": "rollup -c",
+    "build:docs": "typedoc --out docs/ src/index.ts"
   },
   "dependencies": {
     "axios": "0.24.0"
