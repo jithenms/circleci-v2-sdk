@@ -73,7 +73,8 @@ workflows:
       - test:
           filters:
             branches:
-              ignore: /.*/
+              only:
+                - master
             tags:
               only: /^v.*/
       - build:
@@ -81,7 +82,8 @@ workflows:
             - test
           filters:
             branches:
-              ignore: /.*/
+              only:
+                - master
             tags:
               only: /^v.*/
       - deploy:
@@ -91,4 +93,5 @@ workflows:
             tags:
               only: /^v.*/
             branches:
-              ignore: /.*/
+              only:
+                - master
