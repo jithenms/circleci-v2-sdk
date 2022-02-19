@@ -5,7 +5,14 @@
   "keywords": [
     "circleci",
     "ci",
+    "cd",
+    "automation",
+    "deployments",
+    "workflows",
+    "jobs",
+    "devops",
     "api",
+    "sdk",
     "typescript"
   ],
   "author": "Jithen Shriyan <shriyanjithen@gmail.com>",

@@ -11,4 +11,4 @@
 - **Tested**. All modules have extensive test coverage.
 - **Typed**. All modules have TypeScript declarations.
 
-## [Docs](https://nodejs.org/)
+## [Docs](https://jithenshriyan.github.io/circleci-v2-sdk/)

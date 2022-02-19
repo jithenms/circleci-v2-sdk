@@ -3,5 +3,4 @@ dist
 docs
 rollup.config.js
 babel.config.js
-example
 yarn.lock
