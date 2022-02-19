@@ -18,7 +18,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          INITIAL_VERSION: 1.0.0
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -32,7 +31,7 @@ jobs:
           scope: "@octocat"
       - run: yarn
       - run: yarn build
-      - run: yarn publish --access=public
+      - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   docs:
